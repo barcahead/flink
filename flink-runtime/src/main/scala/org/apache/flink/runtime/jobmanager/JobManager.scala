@@ -2232,14 +2232,14 @@ object JobManager {
     val webMonitor: Option[WebMonitor] = {
       LOG.info("Starting JobManager web frontend")
       val leaderRetrievalService = LeaderRetrievalUtils
-	.createLeaderRetrievalService(configuration)
+        .createLeaderRetrievalService(configuration)
 
       // start the web frontend. we need to load this dynamically
       // because it is not in the same project/dependencies
       val webServer = WebMonitorUtils.startWebRuntimeMonitor(
-	configuration,
-	leaderRetrievalService,
-	jobManagerSystem)
+        configuration,
+        leaderRetrievalService,
+        jobManagerSystem)
 
       Option(webServer)
     }
@@ -2400,8 +2400,8 @@ object JobManager {
 
     if (cliOptions.getWebUIPort() >= 0) {
       configuration.setString(
-	ConfigConstants.JOB_MANAGER_WEB_PORT_KEY,
-	String.valueOf(cliOptions.getWebUIPort()))
+        ConfigConstants.JOB_MANAGER_WEB_PORT_KEY,
+        String.valueOf(cliOptions.getWebUIPort()))
     }
 
     if (cliOptions.getHost() != null) {
