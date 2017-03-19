@@ -374,7 +374,7 @@ public class NetUtils {
 	}
 
 	/**
-	 * Tries to create a server from the given sets of ports.
+	 * Tries to create a server from the given set of ports.
 	 *
 	 * @param address An address to listen at.
 	 * @param portRange A set of ports to choose from.
@@ -382,7 +382,7 @@ public class NetUtils {
 	 * @return the created server.
 	 * @throws BindException If port range is exhausted.
 	 */
-	public static <T> T createServerFromPorts(String address, Iterator<Integer> portRange, ServerFactory<T> serverFactory) throws Exception {
+	public static <T> T createServerFromPorts(String address, Iterator<Integer> portRange, ServerFactory<T> serverFactory) throws BindException {
 
 		while (portRange.hasNext()) {
 			ServerSocket availableSocket = NetUtils.createSocketFromPorts(
@@ -406,7 +406,7 @@ public class NetUtils {
 
 			try {
 				return serverFactory.create(address, port);
-			} catch (BindException e) {}
+			} catch (Exception e) {}
 		}
 
 		throw new BindException("Could not start server on any port in port range: " + portRange);
@@ -425,7 +425,24 @@ public class NetUtils {
 		ServerSocket createSocket(int port) throws IOException;
 	}
 
+	/**
+	 * The {@code ServerFactory} interface provides
+	 * for server creating given address and port
+	 *
+	 * The class instance implementing this interface is used as parameter
+	 * for {@link org.apache.flink.util.NetUtils#createServerFromPorts(String, Iterator, ServerFactory)}
+	 */
 	public interface ServerFactory<T> {
+		/**
+		 * Returns server instance given address and port.
+		 *
+		 * @param address An address to listen at.
+		 * @param port A port to bind.
+		 *
+		 * @return the created server
+		 * @throws Exception {@code createServerFromPorts} will ignore all {@code Exception}
+		 * and keep trying next port.
+		 */
 		T create(String address, int port) throws Exception;
 	}
 }

@@ -221,4 +221,9 @@ public class NetUtilsTest {
 			Assert.assertEquals(host.toLowerCase() + ":" + port, NetUtils.unresolvedHostAndPortToNormalizedString(host, port));
 		}
 	}
+
+	@Test
+	public void testCreateServerFromPorts() {
+
+	}
 }

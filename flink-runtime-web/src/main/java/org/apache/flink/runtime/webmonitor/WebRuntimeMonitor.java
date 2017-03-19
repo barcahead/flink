@@ -411,32 +411,25 @@ public class WebRuntimeMonitor implements WebMonitor {
 				.channel(NioServerSocketChannel.class)
 				.childHandler(initializer);
 
-
-		try {
-			this.serverChannel = NetUtils.createServerFromPorts(configuredAddress, configuredPortRange, new NetUtils.ServerFactory<Channel>() {
-				@Override
-				public Channel create(String address, int port) throws Exception {
-					ChannelFuture ch;
-					if (address == null) {
-						ch = bootstrap.bind(port);
-					} else {
-						ch = bootstrap.bind(address, port);
-						LOG.info("Web frontend listening at configuredAddress " + address );
-					}
-
-					return ch.sync().channel();
+		this.serverChannel = NetUtils.createServerFromPorts(configuredAddress, configuredPortRange, new NetUtils.ServerFactory<Channel>() {
+			@Override
+			public Channel create(String address, int port) throws Exception {
+				ChannelFuture ch;
+				if (address == null) {
+					ch = bootstrap.bind(port);
+				} else {
+					ch = bootstrap.bind(address, port);
 				}
-			});
-		} catch (Exception e) {
-			throw new BindException(e.getMessage());
-		}
 
+				return ch.sync().channel();
+			}
+		});
 
 		InetSocketAddress bindAddress = (InetSocketAddress) serverChannel.localAddress();
 		String address = bindAddress.getAddress().getHostAddress();
 		int port = bindAddress.getPort();
 
-		LOG.info("Web frontend listening at " + address + ':' + port);
+		LOG.info("Web frontend listening at {}:{}", address, port);
 	}
 
 	/**

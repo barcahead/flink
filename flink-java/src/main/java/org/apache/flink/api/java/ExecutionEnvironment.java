@@ -1236,7 +1236,7 @@ public abstract class ExecutionEnvironment {
 		checkNotNull(conf, "conf");
 
 		if (!conf.containsKey(ConfigConstants.JOB_MANAGER_WEB_PORT_KEY)) {
-			String port = ConfigConstants.DEFAULT_JOB_MANAGER_WEB_FRONTEND_PORT;
+			String port = ConfigConstants.DEFAULT_JOB_MANAGER_WEB_FRONTEND_PORT_RANGE;
 			conf.setString(ConfigConstants.JOB_MANAGER_WEB_PORT_KEY, port);
 		}
 		conf.setBoolean(ConfigConstants.LOCAL_START_WEBSERVER, true);

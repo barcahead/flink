@@ -379,7 +379,8 @@ abstract class FlinkMiniCluster(
       jobManagerAkkaURL: String)
     : Option[WebMonitor] = {
     if(
-      config.getBoolean(ConfigConstants.LOCAL_START_WEBSERVER, false)) {
+      config.getBoolean(ConfigConstants.LOCAL_START_WEBSERVER, false) &&
+        !config.getString(ConfigConstants.JOB_MANAGER_WEB_PORT_KEY, "0").equals("-1")) {
 
       // TODO: Add support for HA: Make web server work independently from the JM
       val leaderRetrievalService = new StandaloneLeaderRetrievalService(jobManagerAkkaURL)

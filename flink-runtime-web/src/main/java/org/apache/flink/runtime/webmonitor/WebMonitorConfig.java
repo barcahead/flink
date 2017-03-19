@@ -43,7 +43,7 @@ public class WebMonitorConfig {
 	// ------------------------------------------------------------------------
 
 	/** Default port for the web dashboard (= 8081) */
-	public static final String DEFAULT_JOB_MANAGER_WEB_FRONTEND_PORT = ConfigConstants.DEFAULT_JOB_MANAGER_WEB_FRONTEND_PORT;
+	public static final String DEFAULT_JOB_MANAGER_WEB_FRONTEND_PORT = ConfigConstants.DEFAULT_JOB_MANAGER_WEB_FRONTEND_PORT_RANGE;
 
 	/** Default refresh interval for the web dashboard (= 3000 msecs) */
 	public static final long DEFAULT_JOB_MANAGER_WEB_REFRESH_INTERVAL = 3000;
@@ -74,7 +74,7 @@ public class WebMonitorConfig {
 		try {
 			return NetUtils.getPortRangeFromString(serverPortRange);
 		} catch (Exception e) {
-			throw new IllegalArgumentException("Invalid port range definition: " + serverPortRange);
+			throw new IllegalArgumentException("Invalid port range definition for the job manager's web monitor: " + serverPortRange, e);
 		}
 	}
 

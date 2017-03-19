@@ -1259,9 +1259,13 @@ public final class ConfigConstants {
 		key("jobmanager.web.address")
 			.noDefaultValue();
 
+	/** Deprecated in favour of {@link #DEFAULT_JOB_MANAGER_WEB_FRONTEND_PORT_RANGE} */
+	@Deprecated
+	public static final int DEFAULT_JOB_MANAGER_WEB_FRONTEND_PORT = 8081;
+
 	/** The config key for the port of the JobManager web frontend.
 	 * Setting this value to {@code "-1"} disables the web frontend. */
-	public static final String DEFAULT_JOB_MANAGER_WEB_FRONTEND_PORT = "8081";
+	public static final String DEFAULT_JOB_MANAGER_WEB_FRONTEND_PORT_RANGE = "8081";
 
 	/** Default value to override SSL support for the JobManager web UI */
 	public static final boolean DEFAULT_JOB_MANAGER_WEB_SSL_ENABLED = true;

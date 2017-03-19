@@ -1654,7 +1654,7 @@ public abstract class StreamExecutionEnvironment {
 		checkNotNull(conf, "conf");
 
 		if (!conf.containsKey(ConfigConstants.JOB_MANAGER_WEB_PORT_KEY)) {
-			conf.setString(ConfigConstants.JOB_MANAGER_WEB_PORT_KEY, ConfigConstants.DEFAULT_JOB_MANAGER_WEB_FRONTEND_PORT);
+			conf.setString(ConfigConstants.JOB_MANAGER_WEB_PORT_KEY, ConfigConstants.DEFAULT_JOB_MANAGER_WEB_FRONTEND_PORT_RANGE);
 		}
 		conf.setBoolean(ConfigConstants.LOCAL_START_WEBSERVER, true);
 

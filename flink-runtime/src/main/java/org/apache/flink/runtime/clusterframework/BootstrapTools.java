@@ -82,18 +82,7 @@ public class BootstrapTools {
 		return NetUtils.createServerFromPorts(listeningAddress, portsIterator, new NetUtils.ServerFactory<ActorSystem>() {
 			@Override
 			public ActorSystem create(String address, int port) throws Exception {
-				try {
-					return startActorSystem(configuration, address, port, logger);
-				}
-				catch (Exception e) {
-					Throwable cause = e.getCause();
-					if (cause instanceof org.jboss.netty.channel.ChannelException ||
-						cause instanceof java.net.BindException) {
-						throw new BindException(e.getMessage());
-					} else {
-						throw e;
-					}
-				}
+				return startActorSystem(configuration, address, port, logger);
 			}
 		});
 	}
