@@ -287,12 +287,24 @@ public class MesosApplicationMasterRunner {
 
 			// ----------------- (4) start the actors -------------------
 
-			// 1) JobManager & Archive (in non-HA case, the leader service takes this)
-			// 2) Web Monitor (we need its port to register)
+			// 1) Web Monitor (we need its port to register)
+			// 2) JobManager & Archive (in non-HA case, the leader service takes this)
 			// 3) Resource Master for Mesos
 			// 4) Process reapers for the JobManager and Resource Master
 
-			// 1: the JobManager
+			// 1: the web monitor
+			LOG.debug("Starting Web Frontend");
+
+			webMonitor = BootstrapTools.startWebMonitorIfConfigured(config, actorSystem, LOG);
+			if(webMonitor != null) {
+				final URL webMonitorURL = new URL("http", appMasterHostname, webMonitor.getServerPort(), "/");
+				mesosConfig.frameworkInfo().setWebuiUrl(webMonitorURL.toExternalForm());
+
+				config.setString(
+					ConfigConstants.JOB_MANAGER_WEB_PORT_KEY, String.valueOf(webMonitor.getServerPort()));
+			}
+
+			// 2: the JobManager
 			LOG.debug("Starting JobManager actor");
 
 			// we start the JobManager with its standard name
@@ -305,16 +317,6 @@ public class MesosApplicationMasterRunner {
 				scala.Option.<String>empty(),
 				getJobManagerClass(),
 				getArchivistClass())._1();
-
-
-			// 2: the web monitor
-			LOG.debug("Starting Web Frontend");
-
-			webMonitor = BootstrapTools.startWebMonitorIfConfigured(config, actorSystem, LOG);
-			if(webMonitor != null) {
-				final URL webMonitorURL = new URL("http", appMasterHostname, webMonitor.getServerPort(), "/");
-				mesosConfig.frameworkInfo().setWebuiUrl(webMonitorURL.toExternalForm());
-			}
 
 			// 3: Flink's Mesos ResourceManager
 			LOG.debug("Starting Mesos Flink Resource Manager");
