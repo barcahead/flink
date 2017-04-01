@@ -24,6 +24,8 @@ import org.junit.Test;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.net.ServerSocket;
+import java.net.BindException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -224,6 +226,72 @@ public class NetUtilsTest {
 
 	@Test
 	public void testCreateServerFromPorts() {
+		String rangeDefinition = "50000-50050";
+		Iterator<Integer> portsIter = NetUtils.getPortRangeFromString(rangeDefinition);
 
+		ServerSocket server = null;
+
+		// normal case
+		try {
+			server = NetUtils.createServerFromPorts("localhost", portsIter, new NetUtils.ServerFactory<ServerSocket>() {
+				@Override
+				public ServerSocket create(String address, int port) throws Exception {
+					return new ServerSocket(port);
+				}
+			});
+
+			int port = server.getLocalPort();
+			Assert.assertTrue("Server created in specified port range", port >= 50000 && port <= 50050);
+		} catch(Exception e) {
+			fail();
+		} finally {
+			if (server != null) {
+				try {
+					server.close();
+				} catch (Exception ignored) {}
+			}
+		}
+
+		// handle exception during creating server
+		portsIter = NetUtils.getPortRangeFromString(rangeDefinition);
+		server = null;
+		try {
+			server = NetUtils.createServerFromPorts("localhost", portsIter, new NetUtils.ServerFactory<ServerSocket>() {
+				@Override
+				public ServerSocket create(String address, int port) throws Exception {
+					if (port < 50010) {
+						throw new Exception();
+					}
+					else {
+						return new ServerSocket(port);
+					}
+				}
+			});
+
+			int port = server.getLocalPort();
+			Assert.assertTrue("Server created in specified port range", port >= 50010 && port <= 50050);
+		} catch(Exception e) {
+			fail();
+		} finally {
+			if (server != null) {
+				try {
+					server.close();
+				} catch (Exception ignored) {}
+			}
+		}
+
+		// exhaust all ports
+		portsIter = NetUtils.getPortRangeFromString(rangeDefinition);
+		try {
+			NetUtils.createServerFromPorts("localhost", portsIter, new NetUtils.ServerFactory<ServerSocket>() {
+				@Override
+				public ServerSocket create(String address, int port) throws Exception {
+					throw new Exception();
+				}
+			});
+			fail();
+		} catch(Exception e) {
+			Assert.assertTrue(e instanceof BindException);
+		}
 	}
 }

@@ -406,7 +406,9 @@ public class NetUtils {
 
 			try {
 				return serverFactory.create(address, port);
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				LOG.info("Unable to create server on port " + port, e);
+			}
 		}
 
 		throw new BindException("Could not start server on any port in port range: " + portRange);
