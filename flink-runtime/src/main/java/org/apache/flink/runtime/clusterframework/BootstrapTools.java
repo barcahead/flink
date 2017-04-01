@@ -158,10 +158,6 @@ public class BootstrapTools {
 		WebMonitor monitor = WebMonitorUtils.startWebRuntimeMonitor(
 			config, leaderRetrievalService, actorSystem);
 
-		if (monitor != null) {
-			monitor.start(JobManager.getRemoteJobManagerAkkaURL(config));
-		}
-
 		return monitor;
 	}
 

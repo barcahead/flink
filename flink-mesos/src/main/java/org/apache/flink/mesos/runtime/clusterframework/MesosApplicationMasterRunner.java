@@ -318,6 +318,10 @@ public class MesosApplicationMasterRunner {
 				getJobManagerClass(),
 				getArchivistClass())._1();
 
+			if (webMonitor != null) {
+				webMonitor.start(AkkaUtils.getAkkaURL(actorSystem, jobManager));
+			}
+
 			// 3: Flink's Mesos ResourceManager
 			LOG.debug("Starting Mesos Flink Resource Manager");
 

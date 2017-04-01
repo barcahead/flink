@@ -363,6 +363,10 @@ public class YarnApplicationMasterRunner {
 				getJobManagerClass(),
 				getArchivistClass())._1();
 
+			if (webMonitor != null) {
+				webMonitor.start(AkkaUtils.getAkkaURL(actorSystem, jobManager));
+			}
+
 			// 3: Flink's Yarn ResourceManager
 			LOG.debug("Starting YARN Flink Resource Manager");
 
